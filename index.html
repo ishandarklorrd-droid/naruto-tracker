@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="referrer" content="no-referrer">
     
     <title>Uzumaki Daily Tracker</title>
@@ -13,42 +13,26 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@900&display=swap');
 
         :root {
-            --theme-color: #dc143c; 
-            --bg-gradient: radial-gradient(circle at 70% 50%, #331a1a 0%, #0f0a0a 80%);
+            --theme-color: #00bfff; /* Default Chakra Blue for Home */
+            --bg-gradient: radial-gradient(circle at 50% 50%, #001a33 0%, #050505 80%);
             --text-main: #ffffff;
             --text-dim: #a0a0a0;
             --kyubi-orange: #ff5500;
             --kyubi-red: #8b0000;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background: #0a0705; color: var(--text-main); height: 100vh; overflow: hidden; position: relative; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #050505; color: var(--text-main); height: 100vh; width: 100vw; overflow: hidden; position: relative; }
 
-        /* --- THE HAKKE NO FUIN STARTUP SCREEN --- */
+        /* --- STARTUP SEAL SCREEN --- */
         #seal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: radial-gradient(circle at center, #1a0000 0%, #000000 100%);
-            z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;
             transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
         }
-
-        .kyubi-tails-container {
-            position: absolute; bottom: -10vh; left: 50%;
-            width: 10px; height: 10px; z-index: 1;
-            filter: blur(8px) drop-shadow(0 0 30px var(--kyubi-orange));
-            opacity: 0.8; pointer-events: none;
-        }
-
-        .tail {
-            position: absolute; bottom: 0; left: -30px;
-            width: 60px; height: 80vh;
-            background: linear-gradient(to top, transparent, var(--kyubi-red) 20%, var(--kyubi-orange) 80%, transparent);
-            border-radius: 50% 50% 0 0;
-            transform-origin: bottom center; opacity: 0.7;
-        }
-
+        .kyubi-tails-container { position: absolute; bottom: -10vh; left: 50%; width: 10px; height: 10px; z-index: 1; filter: blur(8px) drop-shadow(0 0 30px var(--kyubi-orange)); opacity: 0.8; pointer-events: none; }
+        .tail { position: absolute; bottom: 0; left: -30px; width: 60px; height: 80vh; background: linear-gradient(to top, transparent, var(--kyubi-red) 20%, var(--kyubi-orange) 80%, transparent); border-radius: 50% 50% 0 0; transform-origin: bottom center; opacity: 0.7; }
         .tail:nth-child(1) { transform: rotate(-60deg) skewX(20deg); animation: sway 4s infinite alternate ease-in-out; }
         .tail:nth-child(2) { transform: rotate(-45deg) skewX(15deg); animation: sway 4.5s infinite alternate ease-in-out -0.5s; height: 85vh;}
         .tail:nth-child(3) { transform: rotate(-30deg) skewX(10deg); animation: sway 3.8s infinite alternate ease-in-out -1s; height: 90vh;}
@@ -58,235 +42,148 @@
         .tail:nth-child(7) { transform: rotate(30deg) skewX(-10deg); animation: sway 3.9s infinite alternate ease-in-out -0.8s; height: 90vh;}
         .tail:nth-child(8) { transform: rotate(45deg) skewX(-15deg); animation: sway 4.4s infinite alternate ease-in-out -1.2s; height: 85vh;}
         .tail:nth-child(9) { transform: rotate(60deg) skewX(-20deg); animation: sway 4.2s infinite alternate ease-in-out -0.3s; }
-
-        @keyframes sway {
-            0% { transform: rotate(calc(var(--angle) - 3deg)) scaleY(0.95); opacity: 0.6; }
-            100% { transform: rotate(calc(var(--angle) + 3deg)) scaleY(1.05); opacity: 0.9; }
-        }
+        @keyframes sway { 0% { transform: rotate(calc(var(--angle) - 3deg)) scaleY(0.95); opacity: 0.6; } 100% { transform: rotate(calc(var(--angle) + 3deg)) scaleY(1.05); opacity: 0.9; } }
 
         .seal-content { position: relative; z-index: 10; text-align: center; }
-        .seal-prompt {
-            font-family: 'Montserrat', sans-serif; color: #ffebcd; font-size: 1.5rem;
-            letter-spacing: 6px; margin-bottom: 4rem; text-transform: uppercase;
-            text-shadow: 0 0 15px var(--kyubi-orange), 0 0 30px var(--kyubi-red);
-            animation: textGlow 2s infinite alternate;
-        }
+        .seal-prompt { font-size: 1.2rem; letter-spacing: 4px; margin-bottom: 4rem; text-transform: uppercase; text-shadow: 0 0 15px var(--kyubi-orange); animation: textGlow 2s infinite alternate; }
+        @keyframes textGlow { 0% { text-shadow: 0 0 10px var(--kyubi-orange); opacity: 0.8;} 100% { text-shadow: 0 0 25px var(--kyubi-orange), 0 0 40px var(--kyubi-red); opacity: 1;} }
 
-        @keyframes textGlow {
-            0% { text-shadow: 0 0 10px var(--kyubi-orange); opacity: 0.8;}
-            100% { text-shadow: 0 0 25px var(--kyubi-orange), 0 0 40px var(--kyubi-red); opacity: 1;}
-        }
-
-        .seal-interactive {
-            position: relative; width: 250px; height: 250px; margin: 0 auto;
-            cursor: pointer; display: flex; justify-content: center; align-items: center;
-        }
-
-        .seal-ring-outer {
-            position: absolute; width: 100%; height: 100%;
-            border: 3px solid rgba(255, 69, 0, 0.4); border-radius: 50%;
-            border-top-color: var(--kyubi-red); border-bottom-color: var(--kyubi-orange);
-            animation: spinRight 15s linear infinite;
-        }
+        .seal-interactive { position: relative; width: 200px; height: 200px; margin: 0 auto; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        .seal-ring-outer { position: absolute; width: 100%; height: 100%; border: 3px solid rgba(255, 69, 0, 0.4); border-radius: 50%; border-top-color: var(--kyubi-red); border-bottom-color: var(--kyubi-orange); animation: spinRight 15s linear infinite; }
+        .seal-ring-inner { position: absolute; width: 85%; height: 85%; border: 2px dashed var(--kyubi-orange); border-radius: 50%; animation: spinLeft 10s linear infinite; }
+        .seal-core { position: absolute; width: 65%; height: 65%; background: radial-gradient(circle, #000 40%, var(--kyubi-red) 100%); border-radius: 50%; border: 4px solid #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 30px var(--kyubi-red), inset 0 0 20px var(--kyubi-orange); transition: all 0.3s ease; }
+        .seal-kanji { font-family: 'Noto Serif JP', serif; font-size: 3.5rem; color: #000; text-shadow: 0 0 10px var(--kyubi-orange); -webkit-text-stroke: 1px var(--kyubi-orange); }
+        .seal-runes { position: absolute; width: 140%; height: 140%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5 L50 15 M95 50 L85 50 M50 95 L50 85 M5 50 L15 50 M20 20 L28 28 M80 80 L72 72 M80 20 L72 28 M20 80 L28 72' stroke='%23ff4500' stroke-width='2' opacity='0.6'/%3E%3C/svg%3E"); animation: spinRight 25s linear infinite; pointer-events: none; }
         
-        .seal-ring-inner {
-            position: absolute; width: 85%; height: 85%;
-            border: 2px dashed var(--kyubi-orange); border-radius: 50%;
-            animation: spinLeft 10s linear infinite;
-        }
-
-        .seal-core {
-            position: absolute; width: 65%; height: 65%;
-            background: radial-gradient(circle, #000 40%, var(--kyubi-red) 100%);
-            border-radius: 50%; border: 4px solid #000;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 0 30px var(--kyubi-red), inset 0 0 20px var(--kyubi-orange);
-            transition: all 0.3s ease;
-        }
-
-        .seal-interactive:hover .seal-core {
-            box-shadow: 0 0 50px var(--kyubi-orange), inset 0 0 40px var(--kyubi-red);
-            transform: scale(1.05);
-        }
-
-        .seal-kanji {
-            font-family: 'Noto Serif JP', serif; font-size: 4.5rem; color: #000;
-            text-shadow: 0 0 10px var(--kyubi-orange), 0 0 20px var(--kyubi-orange);
-            -webkit-text-stroke: 1px var(--kyubi-orange);
-        }
-
-        .seal-runes {
-            position: absolute; width: 140%; height: 140%;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5 L50 15 M95 50 L85 50 M50 95 L50 85 M5 50 L15 50 M20 20 L28 28 M80 80 L72 72 M80 20 L72 28 M20 80 L28 72' stroke='%23ff4500' stroke-width='2' opacity='0.6'/%3E%3C/svg%3E");
-            animation: spinRight 25s linear infinite; pointer-events: none;
-        }
-
-        @keyframes spinRight { 100% { transform: rotate(360deg); } }
-        @keyframes spinLeft { 100% { transform: rotate(-360deg); } }
-
         .unlocking .seal-ring-outer { animation: spinRight 0.5s linear infinite; border-width: 8px; border-color: #fff; }
         .unlocking .seal-ring-inner { animation: spinLeft 0.3s linear infinite; border-color: #fff; box-shadow: 0 0 50px #fff;}
         .unlocking .seal-core { background: #fff; box-shadow: 0 0 100px #fff, 0 0 200px var(--kyubi-orange); transform: scale(1.5); }
-        .unlocking .seal-kanji { color: #fff; text-shadow: none; -webkit-text-stroke: 0; opacity: 0; }
-        .unlocking ~ .kyubi-tails-container .tail { background: #fff; box-shadow: 0 0 50px #fff; }
+        .unlocking .seal-kanji { opacity: 0; }
 
-
-        /* --- MAIN UI STYLES --- */
+        /* --- GLOBAL APP BACKGROUND --- */
         .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-gradient); transition: background 0.8s ease; z-index: 0; }
-        .sparkles {
-            position: absolute; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, var(--theme-color), rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)),
-                radial-gradient(3px 3px at 50px 160px, var(--theme-color), rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 90px 40px, #fff, rgba(0,0,0,0));
-            background-repeat: repeat; background-size: 200px 200px;
-            animation: drift 20s linear infinite; opacity: 0.3; z-index: 1; transition: opacity 0.5s;
-        }
+        .sparkles { position: absolute; width: 100%; height: 100%; background-image: radial-gradient(2px 2px at 20px 30px, var(--theme-color), rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)); background-repeat: repeat; background-size: 200px 200px; animation: drift 20s linear infinite; opacity: 0.3; z-index: 1; transition: opacity 0.5s; }
 
-        .top-nav { position: relative; z-index: 20; display: flex; justify-content: space-between; align-items: center; padding: 2rem 4rem; }
-        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
-        .nav-links { display: flex; gap: 3rem; font-weight: 700; font-size: 0.9rem; }
-        .auth-search { display: flex; align-items: center; gap: 2rem; font-weight: 700; font-size: 0.9rem; }
-        .search-bar { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 0.5rem 1rem; color: white; outline: none; backdrop-filter: blur(5px); }
+        @keyframes drift { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-200px) rotate(10deg); } }
+        @keyframes spinRight { 100% { transform: rotate(360deg); } }
+        @keyframes spinLeft { 100% { transform: rotate(-360deg); } }
 
-        .hero-container { position: relative; z-index: 15; display: flex; height: calc(100vh - 100px); padding: 0 4rem; align-items: center; }
+        /* --- TOP NAV --- */
+        .top-nav { position: relative; z-index: 20; display: flex; justify-content: center; padding: 1.5rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; color: var(--text-main); text-shadow: 0 0 10px var(--theme-color); transition: 0.5s; }
+
+        /* --- HOME SCREEN: BODY CANVAS --- */
+        #home-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; z-index: 10; padding-top: 8vh; opacity: 1; transition: opacity 0.5s; }
+        .body-canvas { position: relative; width: 220px; height: 320px; }
         
-        .left-col { flex: 1; max-width: 500px; z-index: 20; max-height: 85vh; overflow-y: auto; scrollbar-width: none; padding-right: 15px; }
+        /* Refined Meditating Ninja Silhouette */
+        .body-silhouette { 
+            width: 100%; height: 100%; stroke: rgba(255,255,255,0.2); stroke-width: 2; fill: rgba(0,0,0,0.5); 
+            filter: drop-shadow(0 0 15px var(--theme-color)); transition: 0.5s; 
+        }
+        
+        /* The dynamic chakra fill utilizing an SVG ClipPath for perfect mobile support */
+        .chakra-overlay { 
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; 
+            background: linear-gradient(to top, #0059b3, #00bfff, #ccffff); 
+            clip-path: url(#ninja-clip); -webkit-clip-path: url(#ninja-clip);
+            transition: height 1s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s; 
+            box-shadow: 0 0 30px var(--theme-color); 
+        }
+        
+        .chakra-percent { margin-top: 15px; font-size: 2.5rem; font-weight: 800; color: var(--theme-color); text-shadow: 0 0 15px var(--theme-color); transition: color 0.5s, text-shadow 0.5s;}
+        .home-title { margin-top: 5px; font-size: 1rem; letter-spacing: 4px; color: var(--text-dim); text-transform: uppercase; }
+
+        /* --- STATE TOGGLES --- */
+        body.is-home .left-col { opacity: 0; pointer-events: none; transform: translateY(-20px); }
+        body.is-home #home-view { opacity: 1; pointer-events: auto; }
+        body:not(.is-home) #home-view { opacity: 0; pointer-events: none; }
+        body.is-home .center-col { opacity: 0; }
+
+        /* --- CHARACTER TRACKERS (MOBILE FIRST) --- */
+        .left-col { position: relative; z-index: 20; width: 100%; padding: 0 1.5rem; max-height: 75vh; overflow-y: auto; scrollbar-width: none; opacity: 1; transition: all 0.5s ease; padding-bottom: 150px; }
         .left-col::-webkit-scrollbar { display: none; }
 
-        .rank-display { display: flex; align-items: center; gap: 10px; font-size: 1.2rem; letter-spacing: 3px; margin-bottom: 0.5rem; }
-        .s-rank { font-family: 'Caveat', cursive; font-size: 5rem; color: var(--theme-color); text-shadow: 0 0 20px var(--theme-color); line-height: 0.8; transition: color 0.5s, text-shadow 0.5s; }
-        .aka { font-size: 0.9rem; margin-bottom: 0.5rem; letter-spacing: 1px; }
-        .char-name { font-size: 3.5rem; font-weight: 800; line-height: 1.1; letter-spacing: 1px; }
-        .kanji { font-size: 1.5rem; font-weight: 300; margin-bottom: 1.5rem; color: var(--text-dim); }
+        .rank-display { display: flex; align-items: center; gap: 10px; font-size: 1rem; letter-spacing: 3px; }
+        .s-rank { font-family: 'Caveat', cursive; font-size: 3.5rem; color: var(--theme-color); text-shadow: 0 0 15px var(--theme-color); }
+        .char-name { font-size: 2.2rem; font-weight: 800; line-height: 1.1; letter-spacing: 1px; text-transform: uppercase; }
+        .kanji { font-size: 1.2rem; font-weight: 300; margin-bottom: 1rem; color: var(--text-dim); }
 
-        .calendar-widget { background: rgba(0, 0, 0, 0.4); border-left: 3px solid var(--theme-color); padding: 1rem; border-radius: 0 8px 8px 0; backdrop-filter: blur(10px); margin-bottom: 1.5rem; transition: border-color 0.5s; }
-        .cal-header { text-align: center; font-weight: 800; color: var(--theme-color); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; transition: color 0.5s;}
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
-        .cal-day-name { font-size: 0.75rem; color: var(--text-dim); font-weight: 700; margin-bottom: 5px;}
-        .cal-date { font-size: 0.85rem; padding: 6px 0; border-radius: 4px; font-weight: 700; color: white; }
-        .cal-date.today { background: var(--theme-color); color: #000; box-shadow: 0 0 15px var(--theme-color); transition: background 0.5s, box-shadow 0.5s;}
-
-        .tracker-form { background: rgba(0, 0, 0, 0.4); padding: 1.5rem; border-left: 3px solid var(--theme-color); backdrop-filter: blur(10px); border-radius: 0 8px 8px 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-dim); transition: border-color 0.5s;}
+        .tracker-form { background: rgba(0, 0, 0, 0.75); padding: 1.5rem; border-radius: 12px; border-bottom: 3px solid var(--theme-color); font-size: 0.9rem; line-height: 1.6; color: #ddd; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+        .dialogue-box { background: rgba(255, 255, 255, 0.05); border-left: 3px solid var(--theme-color); padding: 1rem; margin-bottom: 1.5rem; font-style: italic; border-radius: 0 8px 8px 0; color: #fff; font-size: 0.85rem; }
+        .task-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; font-weight: 700; }
         
-        .dialogue-box {
-            background: rgba(255, 255, 255, 0.05); border-left: 3px solid var(--theme-color);
-            padding: 1rem 1rem 1rem 2rem; margin-bottom: 1.5rem; font-style: italic; border-radius: 0 8px 8px 0;
-            color: #fff; position: relative; font-weight: 400; transition: border-color 0.5s;
-        }
-        .dialogue-box::before {
-            content: '"'; font-size: 4rem; color: var(--theme-color); opacity: 0.2; position: absolute;
-            top: -15px; left: 5px; font-family: serif; transition: color 0.5s;
-        }
-        
-        .tracker-form p { margin-bottom: 1rem; }
-        .task-row { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; color: white; font-weight: 700; }
-        
-        input[type="checkbox"] { appearance: none; width: 18px; height: 18px; border: 2px solid var(--text-dim); border-radius: 4px; cursor: pointer; transition: all 0.3s; }
+        input[type="checkbox"] { appearance: none; min-width: 22px; height: 22px; border: 2px solid var(--text-dim); border-radius: 6px; cursor: pointer; transition: 0.3s; }
         input[type="checkbox"]:checked { background: var(--theme-color); border-color: var(--theme-color); box-shadow: 0 0 10px var(--theme-color); }
-        input[type="text"], input[type="number"] { background: transparent; border: none; border-bottom: 1px solid var(--text-dim); color: white; font-weight: 700; padding: 5px; width: 100%; margin-bottom: 10px; }
+        input[type="text"], input[type="number"] { background: rgba(255,255,255,0.1); border: none; border-bottom: 2px solid var(--text-dim); border-radius: 4px 4px 0 0; color: white; font-weight: 700; padding: 10px; width: 100%; margin-bottom: 10px; }
         input[type="text"]:focus, input[type="number"]:focus { outline: none; border-bottom-color: var(--theme-color); }
 
-        .save-btn { background: transparent; color: var(--theme-color); border: 1px solid var(--theme-color); padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 700; margin-top: 10px; transition: all 0.3s; width: 100%; text-transform: uppercase;}
-        .save-btn:hover { background: var(--theme-color); color: black; box-shadow: 0 0 15px var(--theme-color); }
+        .save-btn { background: var(--theme-color); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 800; margin-top: 15px; width: 100%; text-transform: uppercase; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        .save-btn:active { transform: scale(0.98); }
 
-        .center-col { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: center; align-items: flex-end; z-index: 10; pointer-events: none; }
-        .char-render { height: 92vh; max-width: 55vw; object-fit: contain; object-position: bottom center; filter: drop-shadow(0 0 35px rgba(0,0,0,0.9)); transition: opacity 0.5s ease-in-out, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); transform-origin: bottom center; }
+        .mood-row { display: flex; gap: 8px; margin-top: 10px; }
+        .mood-btn { flex: 1; background: rgba(0,0,0,0.8); color: white; border: 1px solid var(--text-dim); padding: 10px 5px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; text-align: center; }
+        .mood-btn:active { background: var(--theme-color); color: #000; }
+        .chart-container { width: 100%; height: 120px; margin-top: 15px; background: rgba(0,0,0,0.5); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); }
 
-        /* =========================================
-           THE ROTATING CHAKRA WHEEL MENU
-           ========================================= */
-        .right-col { 
-            flex: 0.5; display: flex; flex-direction: column; justify-content: center; align-items: flex-end; 
-            z-index: 20; position: absolute; right: 4rem; top: 0; bottom: 0; 
-        }
+        /* --- CHARACTER RENDER (BACKGROUND ON MOBILE) --- */
+        .center-col { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: flex-end; z-index: 5; pointer-events: none; transition: opacity 0.5s; }
+        .char-render { width: 100%; height: 80vh; object-fit: cover; object-position: top center; opacity: 0.35; filter: drop-shadow(0 0 20px rgba(0,0,0,1)); transition: opacity 0.5s, transform 0.5s; mask-image: linear-gradient(to top, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%); }
+
+        /* --- THE ROTATING CHAKRA WHEEL (MOBILE DOCKED NAV) --- */
+        .wheel-container { position: fixed; left: 50%; z-index: 100; transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
         
-        .chakra-wheel {
-            position: relative; width: 300px; height: 300px;
-            border-radius: 50%; border: 2px dashed rgba(255,255,255,0.1);
-            animation: spinWheel 30s linear infinite;
-            display: flex; justify-content: center; align-items: center;
-        }
+        /* Home State: Placed perfectly below the silhouette */
+        body.is-home .wheel-container { bottom: 5%; transform: translate(-50%, 0) scale(1); }
+        /* Tracker State: Docked at bottom */
+        body:not(.is-home) .wheel-container { bottom: -70px; transform: translate(-50%, 0) scale(0.65); }
 
-        /* Pauses the rotation so the user can easily click a node */
-        .chakra-wheel:hover, .chakra-wheel:hover .wheel-node {
-            animation-play-state: paused;
-        }
+        .chakra-wheel { position: relative; width: 280px; height: 280px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.2); animation: spinWheel 30s linear infinite; display: flex; justify-content: center; align-items: center; }
+        .chakra-wheel:active, .chakra-wheel:hover, .chakra-wheel:active .wheel-node, .chakra-wheel:hover .wheel-node { animation-play-state: paused; }
 
-        .chakra-core {
-            position: absolute; width: 70px; height: 70px; border-radius: 50%;
-            background: radial-gradient(circle, var(--theme-color) 20%, transparent 80%);
-            box-shadow: 0 0 40px var(--theme-color);
-            transition: background 0.5s, box-shadow 0.5s;
-        }
-
-        .wheel-node {
-            position: absolute; width: 50px; height: 50px;
-            background: #0a0705; border: 2px solid var(--text-dim);
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            color: var(--text-dim); cursor: pointer; transition: all 0.3s ease;
-            animation: counterSpin 30s linear infinite; /* Keeps the icons perfectly upright */
-        }
-
-        .wheel-node svg { width: 24px; height: 24px; fill: currentColor; }
-
-        .wheel-node:hover, .wheel-node.active {
-            border-color: var(--theme-color); color: var(--theme-color);
-            box-shadow: 0 0 20px var(--theme-color), inset 0 0 10px var(--theme-color);
-            transform: scale(1.1);
-        }
-
-        .tooltip {
-            position: absolute; bottom: -35px; background: rgba(0,0,0,0.9);
-            color: #fff; padding: 6px 12px; border-radius: 6px;
-            border: 1px solid var(--theme-color); font-size: 0.75rem; font-weight: 700;
-            letter-spacing: 2px; white-space: nowrap; opacity: 0; pointer-events: none;
-            transition: 0.3s; transform: translateY(10px);
-        }
-
-        .wheel-node:hover .tooltip { opacity: 1; transform: translateY(0); }
+        /* Central Home Button */
+        .chakra-core { position: absolute; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, var(--theme-color) 20%, #000 90%); border: 3px solid var(--theme-color); box-shadow: 0 0 30px var(--theme-color); display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fff; font-weight: 800; letter-spacing: 1px; transition: 0.3s; z-index: 110; animation: counterSpin 30s linear infinite; }
+        .chakra-core:active { transform: scale(0.9); }
+        
+        .wheel-node { position: absolute; width: 56px; height: 56px; background: #0a0705; border: 2px solid var(--text-dim); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: var(--text-dim); cursor: pointer; transition: all 0.3s ease; animation: counterSpin 30s linear infinite; box-shadow: 0 0 10px rgba(0,0,0,0.8); }
+        .wheel-node svg { width: 26px; height: 26px; fill: currentColor; }
+        .wheel-node.active, .wheel-node:hover { border-color: var(--theme-color); color: var(--theme-color); box-shadow: 0 0 25px var(--theme-color), inset 0 0 15px var(--theme-color); transform: scale(1.2); }
 
         @keyframes spinWheel { 100% { transform: rotate(360deg); } }
+        /* The counterSpin keeps the HOME text and icons perfectly upright! */
         @keyframes counterSpin { 100% { transform: rotate(-360deg); } }
 
         .char-data { display: none; }
-        .char-data.active { display: block; animation: fadeIn 0.8s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+        .char-data.active { display: block; animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .mood-row { display: flex; gap: 10px; margin-top: 10px; margin-bottom: 10px;}
-        .mood-btn { flex: 1; background: rgba(0,0,0,0.6); color: white; border: 1px solid var(--text-dim); padding: 8px; border-radius: 4px; cursor: pointer; transition: 0.3s; font-weight: 700; font-size: 0.8rem;}
-        .mood-btn:hover { border-color: var(--theme-color); color: var(--theme-color); }
-
-        #toast { position: fixed; bottom: 40px; right: 40px; background: var(--theme-color); color: black; padding: 15px 30px; border-radius: 30px; font-weight: 800; opacity: 0; transition: 0.5s; z-index: 100; box-shadow: 0 0 20px var(--theme-color); }
-        #toast.show { opacity: 1; transform: translateY(-10px); }
-        .chart-container { width: 100%; height: 120px; margin-top: 15px; background: rgba(0,0,0,0.7); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-50px); background: var(--theme-color); color: black; padding: 12px 25px; border-radius: 20px; font-weight: 800; opacity: 0; transition: 0.4s; z-index: 1000; box-shadow: 0 0 20px var(--theme-color); white-space: nowrap;}
+        #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     </style>
 </head>
-<body>
+<body class="is-home">
+
+    <svg width="0" height="0">
+        <defs>
+            <clipPath id="ninja-clip" clipPathUnits="userSpaceOnUse">
+                <path d="M110 20 C95 20 85 35 85 50 C85 65 95 80 110 80 C125 80 135 65 135 50 C135 35 125 20 110 20 Z M75 95 C40 105 30 160 30 190 C30 220 45 260 25 290 C15 305 30 320 110 320 C190 320 205 305 195 290 C175 260 190 220 190 190 C190 160 180 105 145 95 C135 105 125 110 110 110 C95 110 85 105 75 95 Z"/>
+            </clipPath>
+        </defs>
+    </svg>
 
     <div id="seal-overlay">
         <div class="kyubi-tails-container">
-            <div class="tail" style="--angle: -60deg"></div>
-            <div class="tail" style="--angle: -45deg"></div>
-            <div class="tail" style="--angle: -30deg"></div>
-            <div class="tail" style="--angle: -15deg"></div>
-            <div class="tail" style="--angle: 0deg"></div>
-            <div class="tail" style="--angle: 15deg"></div>
-            <div class="tail" style="--angle: 30deg"></div>
-            <div class="tail" style="--angle: 45deg"></div>
+            <div class="tail" style="--angle: -60deg"></div><div class="tail" style="--angle: -45deg"></div>
+            <div class="tail" style="--angle: -30deg"></div><div class="tail" style="--angle: -15deg"></div>
+            <div class="tail" style="--angle: 0deg"></div><div class="tail" style="--angle: 15deg"></div>
+            <div class="tail" style="--angle: 30deg"></div><div class="tail" style="--angle: 45deg"></div>
             <div class="tail" style="--angle: 60deg"></div>
         </div>
-
         <div class="seal-content">
-            <h2 class="seal-prompt">Release the seal of potential?</h2>
+            <h2 class="seal-prompt">Unlock Potential</h2>
             <div class="seal-interactive" id="seal-btn" onclick="unlockSeal()">
-                <div class="seal-runes"></div>
-                <div class="seal-ring-outer"></div>
-                <div class="seal-ring-inner"></div>
-                <div class="seal-core">
-                    <span class="seal-kanji">封</span>
-                </div>
+                <div class="seal-runes"></div><div class="seal-ring-outer"></div><div class="seal-ring-inner"></div>
+                <div class="seal-core"><span class="seal-kanji">封</span></div>
             </div>
         </div>
     </div>
@@ -295,24 +192,29 @@
     <div class="sparkles" id="sparkles"></div>
 
     <nav class="top-nav">
-        <div class="logo"><span style="font-size: 1.8rem; line-height: 0;">⋮</span> DAILY SHINOBI</div>
-        <div class="nav-links"><span>Home</span><span>Dashboard</span><span>Help</span></div>
-        <div class="auth-search"><span>Sign Up</span><input type="search" class="search-bar" placeholder="Q  Search Here..."></div>
+        <div class="logo">⋮ DAILY SHINOBI</div>
     </nav>
+
+    <div id="home-view">
+        <div class="body-canvas">
+            <svg viewBox="0 0 220 320" style="width:100%; height:100%;">
+                <path class="body-silhouette" d="M110 20 C95 20 85 35 85 50 C85 65 95 80 110 80 C125 80 135 65 135 50 C135 35 125 20 110 20 Z M75 95 C40 105 30 160 30 190 C30 220 45 260 25 290 C15 305 30 320 110 320 C190 320 205 305 195 290 C175 260 190 220 190 190 C190 160 180 105 145 95 C135 105 125 110 110 110 C95 110 85 105 75 95 Z" />
+            </svg>
+            <div class="chakra-overlay" id="chakra-fill-level"></div>
+        </div>
+        <div class="chakra-percent" id="chakra-percent-text">0%</div>
+        <div class="home-title">Chakra Capacity</div>
+    </div>
 
     <div class="hero-container">
         <div class="left-col">
             
-            <div class="calendar-widget" id="dynamic-calendar"></div>
-
             <div id="data-guy" class="char-data">
                 <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <div class="aka">The Youth's Guiding Light</div>
                 <h1 class="char-name">MIGHT GUY</h1>
                 <h2 class="kanji">(マイト・ガイ)</h2>
                 <div class="tracker-form">
                     <div class="dialogue-box" id="quote-guy"></div>
-                    <p>Track your physical conditioning to ensure your body can withstand the Eight Inner Gates.</p>
                     <div class="task-row"><input type="checkbox" id="g-push"> <span>100 Pushups</span></div>
                     <div class="task-row"><input type="checkbox" id="g-squat"> <span>100 Squats</span></div>
                     <div class="task-row"><input type="checkbox" id="g-run"> <span>10km Run</span></div>
@@ -322,31 +224,27 @@
 
             <div id="data-pain" class="char-data">
                 <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <div class="aka">The God of Order</div>
                 <h1 class="char-name">PAIN</h1>
                 <h2 class="kanji">(ペイン)</h2>
                 <div class="tracker-form">
                     <div class="dialogue-box" id="quote-pain"></div>
-                    <p>Maintain structural control over your obligations. Synchronize your modules and legal frameworks.</p>
-                    <div class="task-row"><input type="checkbox" id="p-syl"> <span>4th Sem Syllabus Web App Tracked</span></div>
-                    <div class="task-row"><input type="checkbox" id="p-intern"> <span>Delhi Corporate Firms Approached</span></div>
-                    <div class="task-row"><input type="checkbox" id="p-dpdp"> <span>DPDP Act Paper Drafted</span></div>
+                    <div class="task-row"><input type="checkbox" id="p-syl"> <span>Syllabus Tracked</span></div>
+                    <div class="task-row"><input type="checkbox" id="p-intern"> <span>Firms Approached</span></div>
+                    <div class="task-row"><input type="checkbox" id="p-dpdp"> <span>DPDP Drafted</span></div>
                     <button class="save-btn" onclick="saveData()">ENFORCE ORDER</button>
                 </div>
             </div>
 
-            <div id="data-itachi" class="char-data active">
+            <div id="data-itachi" class="char-data">
                 <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <div class="aka">The Illusionist of Insight</div>
                 <h1 class="char-name">ITACHI UCHIHA</h1>
                 <h2 class="kanji">(うちは イタチ)</h2>
                 <div class="tracker-form">
                     <div class="dialogue-box" id="quote-itachi"></div>
-                    <p>True power lies in profound understanding. Track your rigorous daily judgment readings and constitutional case laws.</p>
-                    <input type="text" id="i-case" placeholder="Current Case (e.g. Sanjay Rathore vs State)">
-                    <div style="display:flex; gap: 10px; align-items: center;">
-                        <input type="number" id="i-pages" placeholder="Pages Read" style="width: 100px;">
-                        <span style="color: white; font-weight: bold; margin-bottom: 10px;">/ Daily Goal</span>
+                    <input type="text" id="i-case" placeholder="Current Case Name">
+                    <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
+                        <input type="number" id="i-pages" placeholder="Pages Read">
+                        <span style="font-weight:bold; color:white; white-space:nowrap;">/ Goal</span>
                     </div>
                     <button class="save-btn" onclick="saveData()">CAST TSUKUYOMI</button>
                 </div>
@@ -354,22 +252,19 @@
 
             <div id="data-sasuke" class="char-data">
                 <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <div class="aka">The Last Avenger</div>
                 <h1 class="char-name">SASUKE UCHIHA</h1>
                 <h2 class="kanji">(うちは サスケ)</h2>
                 <div class="tracker-form">
                     <div class="dialogue-box" id="quote-sasuke"></div>
-                    <p>Even an avenger must maintain his vitality. Execute your disciplined morning protocol to ensure peak dermal health.</p>
                     <div class="task-row"><input type="checkbox" id="s-cleanse"> <span>Deep Cleanse</span></div>
                     <div class="task-row"><input type="checkbox" id="s-moist"> <span>Hydration Serum</span></div>
-                    <div class="task-row"><input type="checkbox" id="s-spf"> <span>Sun Protection (SPF 50)</span></div>
+                    <div class="task-row"><input type="checkbox" id="s-spf"> <span>Sun Protection (SPF)</span></div>
                     <button class="save-btn" onclick="saveData()">SECURE GLOW</button>
                 </div>
             </div>
 
             <div id="data-naruto" class="char-data">
                 <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <div class="aka">The Hero Who Won't Give Up</div>
                 <h1 class="char-name">NARUTO UZUMAKI</h1>
                 <h2 class="kanji">(うずまき ナルト)</h2>
                 <div class="tracker-form">
@@ -379,53 +274,49 @@
                         <button class="mood-btn" onclick="logMood('Okay')">OKAY</button>
                         <button class="mood-btn" onclick="logMood('Struggling')">STRUGGLING</button>
                     </div>
-                    <p id="naruto-response" style="color: var(--theme-color); font-weight: bold; font-style: italic; min-height: 20px;"></p>
-                    
-                    <div class="chart-container">
-                        <canvas id="moodChart"></canvas>
-                    </div>
+                    <div class="chart-container"><canvas id="moodChart"></canvas></div>
                 </div>
             </div>
 
         </div>
+    </div>
 
-        <div class="center-col">
-            <img id="main-render" class="char-render" alt="Character Render" src="" crossorigin="anonymous">
-        </div>
+    <div class="center-col">
+        <img id="main-render" class="char-render" alt="Character Render" src="" crossorigin="anonymous">
+    </div>
 
-        <div class="right-col">
-            <div class="chakra-wheel">
-                <div class="chakra-core"></div>
-                
-                <div class="wheel-node active" style="left: 125px; top: -25px;" 
-                     onclick="switchChar('itachi', '#dc143c', 'radial-gradient(circle at 70% 50%, #331a1a 0%, #0f0a0a 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673641/m5atcn0lkw0ucqwutdd3.png', this)">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="6" r="1.5" fill="currentColor"/><circle cx="7" cy="15" r="1.5" fill="currentColor"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg>
-                    <span class="tooltip">SELF-STUDY</span>
-                </div>
-                
-                <div class="wheel-node" style="left: 267.6px; top: 78.7px;"
-                     onclick="switchChar('sasuke', '#5e35b1', 'radial-gradient(circle at 70% 50%, #1f1433 0%, #0a070f 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673642/lhgzaoe7omg9ggjdf8ak.png', this)">
-                    <svg viewBox="0 0 24 24"><path d="M12 2 A10 10 0 0 0 2 12 L22 12 A10 10 0 0 0 12 2 Z" fill="currentColor"/><rect x="11" y="12" width="2" height="10" fill="currentColor"/></svg>
-                    <span class="tooltip">SKIN CARE</span>
-                </div>
-                
-                <div class="wheel-node" style="left: 213.1px; top: 246.3px;"
-                     onclick="switchChar('naruto', '#fca311', 'radial-gradient(circle at 70% 50%, #3a2208 0%, #0a0705 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673641/e0vhezbrpiiyhtwaejws.png', this)">
-                    <svg viewBox="0 0 24 24"><path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" fill="currentColor"/></svg>
-                    <span class="tooltip">WELL-BEING</span>
-                </div>
+    <div class="wheel-container">
+        <div class="chakra-wheel">
+            <div class="chakra-core" onclick="goHome()">HOME</div>
+            
+            <div class="wheel-node" style="left: 112px; top: -28px;" 
+                 onmouseenter="previewTheme('#dc143c', 'radial-gradient(circle at 50% 50%, #331a1a 0%, #050505 80%)')" onmouseleave="resetTheme()"
+                 onclick="switchChar('itachi', '#dc143c', 'radial-gradient(circle at 50% 50%, #331a1a 0%, #050505 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673641/m5atcn0lkw0ucqwutdd3.png', this)">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="6" r="1.5" fill="currentColor"/><circle cx="7" cy="15" r="1.5" fill="currentColor"/><circle cx="17" cy="15" r="1.5" fill="currentColor"/></svg>
+            </div>
+            
+            <div class="wheel-node" style="left: 245px; top: 69px;"
+                 onmouseenter="previewTheme('#5e35b1', 'radial-gradient(circle at 50% 50%, #1f1433 0%, #050505 80%)')" onmouseleave="resetTheme()"
+                 onclick="switchChar('sasuke', '#5e35b1', 'radial-gradient(circle at 50% 50%, #1f1433 0%, #050505 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673642/lhgzaoe7omg9ggjdf8ak.png', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 2 A10 10 0 0 0 2 12 L22 12 A10 10 0 0 0 12 2 Z" fill="currentColor"/><rect x="11" y="12" width="2" height="10" fill="currentColor"/></svg>
+            </div>
+            
+            <div class="wheel-node" style="left: 194px; top: 225px;"
+                 onmouseenter="previewTheme('#fca311', 'radial-gradient(circle at 50% 50%, #3a2208 0%, #050505 80%)')" onmouseleave="resetTheme()"
+                 onclick="switchChar('naruto', '#fca311', 'radial-gradient(circle at 50% 50%, #3a2208 0%, #050505 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673641/e0vhezbrpiiyhtwaejws.png', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 2 L14 10 L22 12 L14 14 L12 22 L10 14 L2 12 L10 10 Z" fill="currentColor"/></svg>
+            </div>
 
-                <div class="wheel-node" style="left: 36.9px; top: 246.3px;"
-                     onclick="switchChar('pain', '#6e5c98', 'radial-gradient(circle at 70% 50%, #201a33 0%, #0a070f 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673641/iqht0womlcfzwdqljcby.png', this)">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
-                    <span class="tooltip">LAW / ACAD</span>
-                </div>
+            <div class="wheel-node" style="left: 30px; top: 225px;"
+                 onmouseenter="previewTheme('#6e5c98', 'radial-gradient(circle at 50% 50%, #201a33 0%, #050505 80%)')" onmouseleave="resetTheme()"
+                 onclick="switchChar('pain', '#6e5c98', 'radial-gradient(circle at 50% 50%, #201a33 0%, #050505 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673641/iqht0womlcfzwdqljcby.png', this)">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+            </div>
 
-                <div class="wheel-node" style="left: -17.6px; top: 78.7px;"
-                     onclick="switchChar('guy', '#28a745', 'radial-gradient(circle at 70% 50%, #1a3320 0%, #0a0f0d 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673640/u4fnnkq2e8g2ba01jdzm.png', this)">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C12 2 5 10 5 15C5 18.86 8.14 22 12 22C15.86 22 19 18.86 19 15C19 10 12 2 12 2ZM12 20C9.24 20 7 17.76 7 15C7 11.5 10.5 5.5 12 4C13.5 5.5 17 11.5 17 15C17 17.76 14.76 20 12 20Z" fill="currentColor"/></svg>
-                    <span class="tooltip">FITNESS</span>
-                </div>
+            <div class="wheel-node" style="left: -21px; top: 69px;"
+                 onmouseenter="previewTheme('#28a745', 'radial-gradient(circle at 50% 50%, #1a3320 0%, #050505 80%)')" onmouseleave="resetTheme()"
+                 onclick="switchChar('guy', '#28a745', 'radial-gradient(circle at 50% 50%, #1a3320 0%, #050505 80%)', 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673640/u4fnnkq2e8g2ba01jdzm.png', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 2C12 2 5 10 5 15C5 18.86 8.14 22 12 22C15.86 22 19 18.86 19 15C19 10 12 2 12 2ZM12 20C9.24 20 7 17.76 7 15C7 11.5 10.5 5.5 12 4C13.5 5.5 17 11.5 17 15C17 17.76 14.76 20 12 20Z" fill="currentColor"/></svg>
             </div>
         </div>
     </div>
@@ -434,106 +325,64 @@
 
     <script>
         let moodChartInstance = null;
+        let currentThemeColor = '#00bfff';
+        let currentBgGradient = 'radial-gradient(circle at 50% 50%, #001a33 0%, #050505 80%)';
 
         const animeQuotes = {
-            guy: [
-                "The Springtime of Youth has yet to fade! Let's do 500 push-ups!",
-                "A failure will win even at the cost of their own life!",
-                "If you want to be free from your suffering, make up your mind.",
-                "You worked hard. There is no such thing as a useless effort.",
-                "It's not always possible to do what we want, but it's important to believe before you act.",
-                "He was a splendid ninja who lived true to his own rules.",
-                "Look deep into my eyes and accept my sincere apology! Also, notice my handsome features."
-            ],
-            pain: [
-                "Sometimes you must hurt in order to know, fall in order to grow, lose in order to gain.",
-                "Even the most ignorant child will eventually grow up as they learn what true pain is.",
-                "Justice comes from vengeance, but that justice only breeds more vengeance.",
-                "We are but men, drawn to act in the name of revenge that we deem to be justice.",
-                "Those who do not understand true pain can never understand true peace.",
-                "Religion, ideology, resources, land... No matter how pathetic the reason, it’s enough to start a war.",
-                "Vengeance is the product of that hate and so death follows."
-            ],
-            itachi: [
-                "It is not wise to judge others based on your own preconceptions and by their appearances.",
-                "People live their lives bound by what they accept as correct and true.",
-                "Knowledge and awareness are vague, and perhaps better called illusions.",
-                "He who forgives and acknowledges himself... that is what it truly means to be strong!",
-                "Even the strongest of opponents always has a weakness.",
-                "Those who turn their hands against their comrades are sure to die a terrible death.",
-                "Growth occurs when one goes beyond one's limits. Realizing that is also part of training."
-            ],
-            sasuke: [
-                "I have long since closed my eyes... My only goal is in the darkness.",
-                "Having too many bonds causes one to lose focus.",
-                "I will become strong in my own way, not in someone else's.",
-                "Tears and rain fall down on my face; my body is unable to stay yet my heart is still willing to leave.",
-                "What I have is not a dream, because I will make it a reality.",
-                "The gap between us hasn't narrowed in the slightest.",
-                "I spare your life on a whim, nothing more."
-            ],
-            naruto: [
-                "Hard work is worthless for those that don’t believe in themselves.",
-                "If you don't like your destiny, don't accept it. Have the courage to change it!",
-                "I’m not gonna run away, I never go back on my word! That’s my nindo: my ninja way!",
-                "When you give up, your dreams and everything else, they're gone.",
-                "While you're alive, you need a reason for your existence.",
-                "Somebody told me I'm a failure, I'll prove them wrong.",
-                "Failing doesn't give you a reason to give up, as long as you believe."
-            ]
+            guy: ["The Springtime of Youth has yet to fade! Let's do 500 push-ups!", "A failure will win even at the cost of their own life!", "If you want to be free from your suffering, make up your mind.", "You worked hard. There is no such thing as a useless effort.", "It's not always possible to do what we want, but believe before you act.", "He was a splendid ninja who lived true to his own rules.", "Look deep into my eyes and accept my sincere apology!"],
+            pain: ["Sometimes you must hurt in order to know, fall to grow.", "Even the most ignorant child will eventually grow up.", "Justice comes from vengeance, but that only breeds more vengeance.", "We are but men, drawn to act in the name of revenge.", "Those who do not understand true pain can never understand peace.", "Religion, ideology, resources, land... enough to start a war.", "Vengeance is the product of that hate and so death follows."],
+            itachi: ["It is not wise to judge others based on your own preconceptions.", "People live their lives bound by what they accept as correct.", "Knowledge and awareness are vague, and perhaps better called illusions.", "He who forgives and acknowledges himself... is truly strong!", "Even the strongest of opponents always has a weakness.", "Those who turn their hands against their comrades are sure to die.", "Growth occurs when one goes beyond one's limits."],
+            sasuke: ["I have long since closed my eyes... My only goal is in the darkness.", "Having too many bonds causes one to lose focus.", "I will become strong in my own way, not in someone else's.", "Tears and rain fall down on my face.", "What I have is not a dream, because I will make it a reality.", "The gap between us hasn't narrowed in the slightest.", "I spare your life on a whim, nothing more."],
+            naruto: ["Hard work is worthless for those that don’t believe in themselves.", "If you don't like your destiny, don't accept it.", "I’m not gonna run away, I never go back on my word!", "When you give up, your dreams and everything else, they're gone.", "While you're alive, you need a reason for your existence.", "Somebody told me I'm a failure, I'll prove them wrong.", "Failing doesn't give you a reason to give up."]
         };
 
         function setDailyQuotes() {
-            const dayOfWeek = new Date().getDay(); 
-            document.getElementById('quote-guy').innerText = animeQuotes.guy[dayOfWeek];
-            document.getElementById('quote-pain').innerText = animeQuotes.pain[dayOfWeek];
-            document.getElementById('quote-itachi').innerText = animeQuotes.itachi[dayOfWeek];
-            document.getElementById('quote-sasuke').innerText = animeQuotes.sasuke[dayOfWeek];
-            document.getElementById('quote-naruto').innerText = animeQuotes.naruto[dayOfWeek];
+            const day = new Date().getDay(); 
+            document.getElementById('quote-guy').innerText = animeQuotes.guy[day];
+            document.getElementById('quote-pain').innerText = animeQuotes.pain[day];
+            document.getElementById('quote-itachi').innerText = animeQuotes.itachi[day];
+            document.getElementById('quote-sasuke').innerText = animeQuotes.sasuke[day];
+            document.getElementById('quote-naruto').innerText = animeQuotes.naruto[day];
         }
 
         function unlockSeal() {
             const sealBtn = document.getElementById('seal-btn');
             const overlay = document.getElementById('seal-overlay');
-            
             sealBtn.classList.add('unlocking');
-            
-            setTimeout(() => {
-                overlay.style.opacity = '0';
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                }, 1500); 
-            }, 600); 
+            setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => { overlay.style.display = 'none'; }, 1500); }, 600); 
         }
 
-        function buildCalendar() {
-            const calDiv = document.getElementById('dynamic-calendar');
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = date.getMonth();
-            const today = date.getDate();
-
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
-
-            let html = `<div class="cal-header">${monthNames[month]} ${year}</div><div class="cal-grid">`;
-            
-            for(let d of dayNames) html += `<div class="cal-day-name">${d}</div>`;
-            for(let i = 0; i < firstDay; i++) html += `<div></div>`;
-            
-            for(let i = 1; i <= daysInMonth; i++) {
-                let classes = "cal-date";
-                if(i === today) classes += " today";
-                html += `<div class="${classes}">${i}</div>`;
+        // Hover Effect Logic
+        function previewTheme(color, gradient) {
+            if (document.body.classList.contains('is-home')) {
+                document.documentElement.style.setProperty('--theme-color', color);
+                document.getElementById('bg-layer').style.background = gradient;
             }
-            html += `</div>`;
-            calDiv.innerHTML = html;
         }
 
+        function resetTheme() {
+            if (document.body.classList.contains('is-home')) {
+                document.documentElement.style.setProperty('--theme-color', currentThemeColor);
+                document.getElementById('bg-layer').style.background = currentBgGradient;
+            }
+        }
+
+        // Return to Chakra Body Home Screen
+        function goHome() {
+            document.body.classList.add('is-home');
+            currentThemeColor = '#00bfff';
+            currentBgGradient = 'radial-gradient(circle at 50% 50%, #001a33 0%, #050505 80%)';
+            document.documentElement.style.setProperty('--theme-color', currentThemeColor);
+            document.getElementById('bg-layer').style.background = currentBgGradient;
+            document.querySelectorAll('.wheel-node').forEach(el => el.classList.remove('active'));
+            updateChakraFill();
+        }
+
+        // Open Character Tracker
         function switchChar(id, color, gradient, baseImgUrl, clickedElement) {
+            document.body.classList.remove('is-home');
+            currentThemeColor = color;
+            currentBgGradient = gradient;
             document.documentElement.style.setProperty('--theme-color', color);
             document.getElementById('bg-layer').style.background = gradient;
 
@@ -543,77 +392,78 @@
             
             setTimeout(() => {
                 render.src = baseImgUrl; 
-                render.style.opacity = 1;
+                render.style.opacity = 0.35; 
                 render.style.transform = 'scale(1) translateY(0)';
             }, 350);
 
             document.querySelectorAll('.char-data').forEach(el => el.classList.remove('active'));
             document.getElementById('data-' + id).classList.add('active');
 
-            // Update active state on the wheel nodes
             document.querySelectorAll('.wheel-node').forEach(el => el.classList.remove('active'));
             if(clickedElement) clickedElement.classList.add('active');
 
-            if (id === 'naruto') {
-                renderMoodChart();
-            }
+            if (id === 'naruto') renderMoodChart();
+        }
+
+        // Global Progress Tracker logic
+        function updateChakraFill() {
+            const db = JSON.parse(localStorage.getItem('shinobiDB')) || {};
+            let score = 0;
+            
+            if(db.gPush) score++; if(db.gSquat) score++; if(db.gRun) score++;
+            if(db.pSyl) score++; if(db.pIntern) score++; if(db.pDpdp) score++;
+            if(db.iCase && db.iCase.trim() !== '') score++; if(db.iPages && db.iPages.trim() !== '') score++;
+            if(db.sCleanse) score++; if(db.sMoist) score++; if(db.sSpf) score++;
+            
+            const moodDB = JSON.parse(localStorage.getItem('moodDB')) || [];
+            const todayStr = new Date().toDateString();
+            if(moodDB.some(m => m.date === todayStr)) score++;
+
+            const totalGoals = 12;
+            const percentage = Math.min(100, Math.round((score / totalGoals) * 100));
+            
+            // Adjust the background fill and color intensity based on progress
+            document.getElementById('chakra-fill-level').style.height = percentage + '%';
+            document.getElementById('chakra-percent-text').innerText = percentage + '%';
         }
 
         function saveData() {
             const data = {
-                gPush: document.getElementById('g-push').checked,
-                gSquat: document.getElementById('g-squat').checked,
-                gRun: document.getElementById('g-run').checked,
-                pSyl: document.getElementById('p-syl').checked,
-                pIntern: document.getElementById('p-intern').checked,
-                pDpdp: document.getElementById('p-dpdp').checked,
-                iCase: document.getElementById('i-case').value,
-                iPages: document.getElementById('i-pages').value,
-                sCleanse: document.getElementById('s-cleanse').checked,
-                sMoist: document.getElementById('s-moist').checked,
-                sSpf: document.getElementById('s-spf').checked
+                gPush: document.getElementById('g-push').checked, gSquat: document.getElementById('g-squat').checked, gRun: document.getElementById('g-run').checked,
+                pSyl: document.getElementById('p-syl').checked, pIntern: document.getElementById('p-intern').checked, pDpdp: document.getElementById('p-dpdp').checked,
+                iCase: document.getElementById('i-case').value, iPages: document.getElementById('i-pages').value,
+                sCleanse: document.getElementById('s-cleanse').checked, sMoist: document.getElementById('s-moist').checked, sSpf: document.getElementById('s-spf').checked
             };
             localStorage.setItem('shinobiDB', JSON.stringify(data));
             showToast();
+            updateChakraFill();
         }
 
         function loadData() {
             const db = JSON.parse(localStorage.getItem('shinobiDB'));
             if(db) {
-                document.getElementById('g-push').checked = db.gPush || false;
-                document.getElementById('g-squat').checked = db.gSquat || false;
-                document.getElementById('g-run').checked = db.gRun || false;
-                document.getElementById('p-syl').checked = db.pSyl || false;
-                document.getElementById('p-intern').checked = db.pIntern || false;
-                document.getElementById('p-dpdp').checked = db.pDpdp || false;
-                document.getElementById('i-case').value = db.iCase || '';
-                document.getElementById('i-pages').value = db.iPages || '';
-                document.getElementById('s-cleanse').checked = db.sCleanse || false;
-                document.getElementById('s-moist').checked = db.sMoist || false;
-                document.getElementById('s-spf').checked = db.sSpf || false;
+                document.getElementById('g-push').checked = db.gPush || false; document.getElementById('g-squat').checked = db.gSquat || false; document.getElementById('g-run').checked = db.gRun || false;
+                document.getElementById('p-syl').checked = db.pSyl || false; document.getElementById('p-intern').checked = db.pIntern || false; document.getElementById('p-dpdp').checked = db.pDpdp || false;
+                document.getElementById('i-case').value = db.iCase || ''; document.getElementById('i-pages').value = db.iPages || '';
+                document.getElementById('s-cleanse').checked = db.sCleanse || false; document.getElementById('s-moist').checked = db.sMoist || false; document.getElementById('s-spf').checked = db.sSpf || false;
             }
+            updateChakraFill();
         }
 
         function logMood(mood) {
-            const res = document.getElementById('naruto-response');
-            if(mood === 'Great') res.innerText = `"That's what I'm talking about! Keep that fire burning!"`;
-            if(mood === 'Okay') res.innerText = `"Take it steady! We still have a long way to go!"`;
-            if(mood === 'Struggling') res.innerText = `"Hey, even I fail sometimes. Rest up, you've got this!"`;
-            
             let history = JSON.parse(localStorage.getItem('moodDB')) || [];
-            let moodScore = 2; 
-            if(mood === 'Great') moodScore = 3;
-            if(mood === 'Struggling') moodScore = 1;
+            let moodScore = 2; if(mood === 'Great') moodScore = 3; if(mood === 'Struggling') moodScore = 1;
 
             const now = new Date();
             const timeLabel = now.getHours() + ":" + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
             
-            history.push({ time: timeLabel, score: moodScore, label: mood });
+            history.push({ time: timeLabel, score: moodScore, label: mood, date: now.toDateString() });
             if (history.length > 7) history.shift();
 
             localStorage.setItem('moodDB', JSON.stringify(history));
             showToast();
             renderMoodChart();
+            updateChakraFill();
         }
 
         function renderMoodChart() {
@@ -623,41 +473,7 @@
             const ctx = document.getElementById('moodChart').getContext('2d');
 
             if (moodChartInstance) moodChartInstance.destroy();
-
-            moodChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Chakra Level',
-                        data: dataPoints,
-                        borderColor: '#fca311', 
-                        backgroundColor: 'rgba(252, 163, 17, 0.2)',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#ffffff',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            min: 0.5, max: 3.5,
-                            ticks: { stepSize: 1, color: '#a0a0a0', callback: function(value) {
-                                if(value === 1) return 'Struggling';
-                                if(value === 2) return 'Okay';
-                                if(value === 3) return 'Great';
-                                return '';
-                            }},
-                            grid: { color: 'rgba(255,255,255,0.1)' }
-                        },
-                        x: { ticks: { color: '#a0a0a0' }, grid: { display: false } }
-                    },
-                    plugins: { legend: { display: false } }
-                }
-            });
+            moodChartInstance = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ data: dataPoints, borderColor: '#fca311', backgroundColor: 'rgba(252, 163, 17, 0.2)', borderWidth: 2, pointBackgroundColor: '#ffffff', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0.5, max: 3.5, ticks: { stepSize: 1, color: '#a0a0a0', callback: function(value) { if(value===1)return 'Struggling'; if(value===2)return 'Okay'; if(value===3)return 'Great'; return ''; } }, grid: { color: 'rgba(255,255,255,0.1)' } }, x: { ticks: { color: '#a0a0a0' }, grid: { display: false } } }, plugins: { legend: { display: false } } } });
         }
 
         function showToast() {
@@ -667,12 +483,8 @@
         }
 
         window.onload = function() {
-            buildCalendar(); 
             setDailyQuotes(); 
             loadData();
-            const render = document.getElementById('main-render');
-            render.src = 'https://res.cloudinary.com/dwnby3hw1/image/upload/v1773673641/m5atcn0lkw0ucqwutdd3.png';
-            render.style.opacity = 1;
         };
     </script>
 </body>
