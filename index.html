@@ -9,12 +9,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,700;0,800;1,400&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@900&display=swap');
 
         :root {
-            --theme-color: #00bfff; /* Default Chakra Blue for Home */
-            --bg-gradient: radial-gradient(circle at 50% 50%, #001a33 0%, #050505 80%);
+            --theme-color: #00bfff; 
+            --bg-gradient: radial-gradient(circle at 50% 50%, #111 0%, #050505 100%);
             --text-main: #ffffff;
             --text-dim: #a0a0a0;
             --kyubi-orange: #ff5500;
@@ -24,13 +23,14 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: #050505; color: var(--text-main); height: 100vh; width: 100vw; overflow: hidden; position: relative; }
 
+        /* --- BACKGROUNDS & TEXTURES --- */
+        .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-gradient); transition: background 0.8s ease; z-index: 0; }
+        .dot-texture { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 15px 15px; z-index: 1; pointer-events: none; }
+        .sparkles { position: absolute; width: 100%; height: 100%; background-image: radial-gradient(2px 2px at 20px 30px, var(--theme-color), rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)); background-repeat: repeat; background-size: 200px 200px; animation: drift 20s linear infinite; opacity: 0.2; z-index: 2; transition: opacity 0.5s; pointer-events: none;}
+        @keyframes drift { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-200px) rotate(10deg); } }
+
         /* --- STARTUP SEAL SCREEN --- */
-        #seal-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at center, #1a0000 0%, #000000 100%);
-            z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        #seal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle at center, #1a0000 0%, #000000 100%); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .kyubi-tails-container { position: absolute; bottom: -10vh; left: 50%; width: 10px; height: 10px; z-index: 1; filter: blur(8px) drop-shadow(0 0 30px var(--kyubi-orange)); opacity: 0.8; pointer-events: none; }
         .tail { position: absolute; bottom: 0; left: -30px; width: 60px; height: 80vh; background: linear-gradient(to top, transparent, var(--kyubi-red) 20%, var(--kyubi-orange) 80%, transparent); border-radius: 50% 50% 0 0; transform-origin: bottom center; opacity: 0.7; }
         .tail:nth-child(1) { transform: rotate(-60deg) skewX(20deg); animation: sway 4s infinite alternate ease-in-out; }
@@ -54,43 +54,24 @@
         .seal-core { position: absolute; width: 65%; height: 65%; background: radial-gradient(circle, #000 40%, var(--kyubi-red) 100%); border-radius: 50%; border: 4px solid #000; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 30px var(--kyubi-red), inset 0 0 20px var(--kyubi-orange); transition: all 0.3s ease; }
         .seal-kanji { font-family: 'Noto Serif JP', serif; font-size: 3.5rem; color: #000; text-shadow: 0 0 10px var(--kyubi-orange); -webkit-text-stroke: 1px var(--kyubi-orange); }
         .seal-runes { position: absolute; width: 140%; height: 140%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 5 L50 15 M95 50 L85 50 M50 95 L50 85 M5 50 L15 50 M20 20 L28 28 M80 80 L72 72 M80 20 L72 28 M20 80 L28 72' stroke='%23ff4500' stroke-width='2' opacity='0.6'/%3E%3C/svg%3E"); animation: spinRight 25s linear infinite; pointer-events: none; }
-        
+        @keyframes spinRight { 100% { transform: rotate(360deg); } }
+        @keyframes spinLeft { 100% { transform: rotate(-360deg); } }
+
         .unlocking .seal-ring-outer { animation: spinRight 0.5s linear infinite; border-width: 8px; border-color: #fff; }
         .unlocking .seal-ring-inner { animation: spinLeft 0.3s linear infinite; border-color: #fff; box-shadow: 0 0 50px #fff;}
         .unlocking .seal-core { background: #fff; box-shadow: 0 0 100px #fff, 0 0 200px var(--kyubi-orange); transform: scale(1.5); }
         .unlocking .seal-kanji { opacity: 0; }
 
-        /* --- GLOBAL APP BACKGROUND --- */
-        .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-gradient); transition: background 0.8s ease; z-index: 0; }
-        .sparkles { position: absolute; width: 100%; height: 100%; background-image: radial-gradient(2px 2px at 20px 30px, var(--theme-color), rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, #fff, rgba(0,0,0,0)); background-repeat: repeat; background-size: 200px 200px; animation: drift 20s linear infinite; opacity: 0.3; z-index: 1; transition: opacity 0.5s; }
-
-        @keyframes drift { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-200px) rotate(10deg); } }
-        @keyframes spinRight { 100% { transform: rotate(360deg); } }
-        @keyframes spinLeft { 100% { transform: rotate(-360deg); } }
 
         /* --- TOP NAV --- */
-        .top-nav { position: relative; z-index: 20; display: flex; justify-content: center; padding: 1.5rem; }
-        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; color: var(--text-main); text-shadow: 0 0 10px var(--theme-color); transition: 0.5s; }
+        .top-nav { position: relative; z-index: 20; display: flex; justify-content: center; padding: 1.5rem; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-size: 1.2rem; font-weight: 800; letter-spacing: 2px; color: var(--text-main); text-shadow: 0 0 10px var(--theme-color); transition: 0.5s; display: flex; align-items: center; gap: 10px;}
 
         /* --- HOME SCREEN: BODY CANVAS --- */
-        #home-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; z-index: 10; padding-top: 8vh; opacity: 1; transition: opacity 0.5s; }
+        #home-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; z-index: 10; padding-top: 15vh; opacity: 1; transition: opacity 0.5s; }
         .body-canvas { position: relative; width: 220px; height: 320px; }
-        
-        /* Refined Meditating Ninja Silhouette */
-        .body-silhouette { 
-            width: 100%; height: 100%; stroke: rgba(255,255,255,0.2); stroke-width: 2; fill: rgba(0,0,0,0.5); 
-            filter: drop-shadow(0 0 15px var(--theme-color)); transition: 0.5s; 
-        }
-        
-        /* The dynamic chakra fill utilizing an SVG ClipPath for perfect mobile support */
-        .chakra-overlay { 
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; 
-            background: linear-gradient(to top, #0059b3, #00bfff, #ccffff); 
-            clip-path: url(#ninja-clip); -webkit-clip-path: url(#ninja-clip);
-            transition: height 1s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s; 
-            box-shadow: 0 0 30px var(--theme-color); 
-        }
-        
+        .body-silhouette { width: 100%; height: 100%; stroke: rgba(255,255,255,0.2); stroke-width: 2; fill: rgba(0,0,0,0.5); filter: drop-shadow(0 0 15px var(--theme-color)); transition: 0.5s; }
+        .chakra-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: linear-gradient(to top, #0059b3, #00bfff, #ccffff); clip-path: url(#ninja-clip); -webkit-clip-path: url(#ninja-clip); transition: height 1s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.5s; box-shadow: 0 0 30px var(--theme-color); }
         .chakra-percent { margin-top: 15px; font-size: 2.5rem; font-weight: 800; color: var(--theme-color); text-shadow: 0 0 15px var(--theme-color); transition: color 0.5s, text-shadow 0.5s;}
         .home-title { margin-top: 5px; font-size: 1rem; letter-spacing: 4px; color: var(--text-dim); text-transform: uppercase; }
 
@@ -100,48 +81,74 @@
         body:not(.is-home) #home-view { opacity: 0; pointer-events: none; }
         body.is-home .center-col { opacity: 0; }
 
-        /* --- CHARACTER TRACKERS (MOBILE FIRST) --- */
-        .left-col { position: relative; z-index: 20; width: 100%; padding: 0 1.5rem; max-height: 75vh; overflow-y: auto; scrollbar-width: none; opacity: 1; transition: all 0.5s ease; padding-bottom: 150px; }
+        /* --- CHARACTER TRACKERS (NEW MAGAZINE UI) --- */
+        .hero-container { position: relative; z-index: 15; display: flex; height: calc(100vh - 70px); align-items: flex-start; padding-top: 2rem; }
+        .left-col { position: relative; z-index: 20; width: 100%; padding: 0 1.5rem; height: 100%; overflow-y: auto; scrollbar-width: none; opacity: 1; transition: all 0.5s ease; padding-bottom: 200px; }
         .left-col::-webkit-scrollbar { display: none; }
 
-        .rank-display { display: flex; align-items: center; gap: 10px; font-size: 1rem; letter-spacing: 3px; }
-        .s-rank { font-family: 'Caveat', cursive; font-size: 3.5rem; color: var(--theme-color); text-shadow: 0 0 15px var(--theme-color); }
-        .char-name { font-size: 2.2rem; font-weight: 800; line-height: 1.1; letter-spacing: 1px; text-transform: uppercase; }
-        .kanji { font-size: 1.2rem; font-weight: 300; margin-bottom: 1rem; color: var(--text-dim); }
-
-        .tracker-form { background: rgba(0, 0, 0, 0.75); padding: 1.5rem; border-radius: 12px; border-bottom: 3px solid var(--theme-color); font-size: 0.9rem; line-height: 1.6; color: #ddd; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
-        .dialogue-box { background: rgba(255, 255, 255, 0.05); border-left: 3px solid var(--theme-color); padding: 1rem; margin-bottom: 1.5rem; font-style: italic; border-radius: 0 8px 8px 0; color: #fff; font-size: 0.85rem; }
-        .task-row { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; font-weight: 700; }
+        .char-header-sub { font-size: 0.8rem; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 5px; }
+        .char-header-main { font-size: 3.2rem; font-weight: 800; color: var(--theme-color); line-height: 1.1; margin-bottom: 15px; text-shadow: 0 0 15px rgba(0,0,0,0.8); transition: color 0.5s;}
         
-        input[type="checkbox"] { appearance: none; min-width: 22px; height: 22px; border: 2px solid var(--text-dim); border-radius: 6px; cursor: pointer; transition: 0.3s; }
+        .desc-box { font-size: 0.85rem; line-height: 1.6; color: #ddd; margin-bottom: 25px; max-width: 90%; text-shadow: 0 2px 4px #000; }
+        
+        /* The 3-Card Layout */
+        .stats-carousel { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; scroll-snap-type: x mandatory; }
+        .stats-carousel::-webkit-scrollbar { display: none; }
+        
+        .stat-card { 
+            flex: 0 0 140px; scroll-snap-align: start;
+            background: rgba(15, 10, 10, 0.7); border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 12px; padding: 15px; position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5); backdrop-filter: blur(10px);
+            transition: border-color 0.5s; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        
+        /* Center card glow effect from mockup */
+        .stat-card.center-glow { 
+            background: rgba(0,0,0,0.8); border: 2px solid var(--theme-color); 
+            box-shadow: 0 0 20px var(--theme-color), inset 0 0 15px var(--theme-color); 
+            align-items: center; justify-content: center;
+        }
+        
+        .stat-num { font-size: 1.8rem; font-weight: 900; color: var(--text-main); margin-bottom: 10px; opacity: 0.9; }
+        .stat-title { font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .stat-val { font-size: 3.5rem; font-weight: 800; color: var(--theme-color); line-height: 1; text-shadow: 0 0 10px var(--theme-color); transition: color 0.5s; }
+
+        /* Form elements inside cards */
+        .task-label { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; color: #fff; cursor: pointer; }
+        input[type="checkbox"] { appearance: none; min-width: 16px; height: 16px; border: 2px solid var(--text-dim); border-radius: 4px; cursor: pointer; transition: 0.3s; }
         input[type="checkbox"]:checked { background: var(--theme-color); border-color: var(--theme-color); box-shadow: 0 0 10px var(--theme-color); }
-        input[type="text"], input[type="number"] { background: rgba(255,255,255,0.1); border: none; border-bottom: 2px solid var(--text-dim); border-radius: 4px 4px 0 0; color: white; font-weight: 700; padding: 10px; width: 100%; margin-bottom: 10px; }
-        input[type="text"]:focus, input[type="number"]:focus { outline: none; border-bottom-color: var(--theme-color); }
+        
+        .sleek-input { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: white; font-weight: 700; padding: 8px; width: 100%; font-size: 0.8rem; margin-top: auto; }
+        .sleek-input:focus { outline: none; border-color: var(--theme-color); }
 
-        .save-btn { background: var(--theme-color); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 800; margin-top: 15px; width: 100%; text-transform: uppercase; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
-        .save-btn:active { transform: scale(0.98); }
+        /* "About" Section & Pills */
+        .about-section { margin-top: 20px; }
+        .about-title { font-size: 1.5rem; font-weight: 800; color: var(--theme-color); margin-bottom: 15px; transition: color 0.5s; }
+        .pill-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; }
+        .pill { padding: 6px 16px; border: 1px solid var(--theme-color); border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: #fff; background: rgba(0,0,0,0.6); box-shadow: 0 0 10px rgba(0,0,0,0.5); transition: border-color 0.5s; }
 
-        .mood-row { display: flex; gap: 8px; margin-top: 10px; }
-        .mood-btn { flex: 1; background: rgba(0,0,0,0.8); color: white; border: 1px solid var(--text-dim); padding: 10px 5px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; text-align: center; }
-        .mood-btn:active { background: var(--theme-color); color: #000; }
-        .chart-container { width: 100%; height: 120px; margin-top: 15px; background: rgba(0,0,0,0.5); border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.1); }
+        /* Media Boxes (Used for charts/moods) */
+        .media-grid { display: flex; gap: 15px; margin-bottom: 25px; }
+        .media-box { flex: 1; aspect-ratio: 1; background: rgba(0,0,0,0.6); border: 1px solid var(--theme-color); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; position: relative; }
+        
+        .action-btn { background: var(--theme-color); color: #000; border: none; padding: 10px 24px; border-radius: 30px; font-weight: 800; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 10px; text-transform: uppercase; box-shadow: 0 0 15px var(--theme-color); transition: 0.3s; cursor: pointer; }
+        .action-btn:active { transform: scale(0.95); }
+        .action-btn .arrow { background: #fff; color: #000; border-radius: 50%; width: 24px; height: 24px; display: flex; justify-content: center; align-items: center; font-size: 1rem; }
 
         /* --- CHARACTER RENDER (BACKGROUND ON MOBILE) --- */
-        .center-col { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: flex-end; z-index: 5; pointer-events: none; transition: opacity 0.5s; }
-        .char-render { width: 100%; height: 80vh; object-fit: cover; object-position: top center; opacity: 0.35; filter: drop-shadow(0 0 20px rgba(0,0,0,1)); transition: opacity 0.5s, transform 0.5s; mask-image: linear-gradient(to top, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%); }
+        .center-col { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; display: flex; justify-content: flex-end; align-items: flex-end; z-index: 5; pointer-events: none; transition: opacity 0.5s; overflow: hidden; }
+        /* Shifted image to the right to match the mockup */
+        .char-render { width: 120%; max-width: 600px; height: 85vh; object-fit: cover; object-position: top center; opacity: 0.4; filter: drop-shadow(0 0 20px rgba(0,0,0,1)); transition: opacity 0.5s, transform 0.5s; margin-right: -10vw; mask-image: linear-gradient(to top, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%); -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%); }
 
         /* --- THE ROTATING CHAKRA WHEEL (MOBILE DOCKED NAV) --- */
         .wheel-container { position: fixed; left: 50%; z-index: 100; transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        
-        /* Home State: Placed perfectly below the silhouette */
         body.is-home .wheel-container { bottom: 5%; transform: translate(-50%, 0) scale(1); }
-        /* Tracker State: Docked at bottom */
         body:not(.is-home) .wheel-container { bottom: -70px; transform: translate(-50%, 0) scale(0.65); }
 
         .chakra-wheel { position: relative; width: 280px; height: 280px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.2); animation: spinWheel 30s linear infinite; display: flex; justify-content: center; align-items: center; }
         .chakra-wheel:active, .chakra-wheel:hover, .chakra-wheel:active .wheel-node, .chakra-wheel:hover .wheel-node { animation-play-state: paused; }
 
-        /* Central Home Button */
         .chakra-core { position: absolute; width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, var(--theme-color) 20%, #000 90%); border: 3px solid var(--theme-color); box-shadow: 0 0 30px var(--theme-color); display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fff; font-weight: 800; letter-spacing: 1px; transition: 0.3s; z-index: 110; animation: counterSpin 30s linear infinite; }
         .chakra-core:active { transform: scale(0.9); }
         
@@ -150,7 +157,6 @@
         .wheel-node.active, .wheel-node:hover { border-color: var(--theme-color); color: var(--theme-color); box-shadow: 0 0 25px var(--theme-color), inset 0 0 15px var(--theme-color); transform: scale(1.2); }
 
         @keyframes spinWheel { 100% { transform: rotate(360deg); } }
-        /* The counterSpin keeps the HOME text and icons perfectly upright! */
         @keyframes counterSpin { 100% { transform: rotate(-360deg); } }
 
         .char-data { display: none; }
@@ -163,13 +169,7 @@
 </head>
 <body class="is-home">
 
-    <svg width="0" height="0">
-        <defs>
-            <clipPath id="ninja-clip" clipPathUnits="userSpaceOnUse">
-                <path d="M110 20 C95 20 85 35 85 50 C85 65 95 80 110 80 C125 80 135 65 135 50 C135 35 125 20 110 20 Z M75 95 C40 105 30 160 30 190 C30 220 45 260 25 290 C15 305 30 320 110 320 C190 320 205 305 195 290 C175 260 190 220 190 190 C190 160 180 105 145 95 C135 105 125 110 110 110 C95 110 85 105 75 95 Z"/>
-            </clipPath>
-        </defs>
-    </svg>
+    <svg width="0" height="0"><defs><clipPath id="ninja-clip" clipPathUnits="userSpaceOnUse"><path d="M110 20 C95 20 85 35 85 50 C85 65 95 80 110 80 C125 80 135 65 135 50 C135 35 125 20 110 20 Z M75 95 C40 105 30 160 30 190 C30 220 45 260 25 290 C15 305 30 320 110 320 C190 320 205 305 195 290 C175 260 190 220 190 190 C190 160 180 105 145 95 C135 105 125 110 110 110 C95 110 85 105 75 95 Z"/></clipPath></defs></svg>
 
     <div id="seal-overlay">
         <div class="kyubi-tails-container">
@@ -189,10 +189,14 @@
     </div>
 
     <div class="bg-layer" id="bg-layer"></div>
+    <div class="dot-texture"></div>
     <div class="sparkles" id="sparkles"></div>
 
     <nav class="top-nav">
-        <div class="logo">⋮ DAILY SHINOBI</div>
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            DAILY SHINOBI
+        </div>
     </nav>
 
     <div id="home-view">
@@ -209,73 +213,182 @@
     <div class="hero-container">
         <div class="left-col">
             
-            <div id="data-guy" class="char-data">
-                <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <h1 class="char-name">MIGHT GUY</h1>
-                <h2 class="kanji">(マイト・ガイ)</h2>
-                <div class="tracker-form">
-                    <div class="dialogue-box" id="quote-guy"></div>
-                    <div class="task-row"><input type="checkbox" id="g-push"> <span>100 Pushups</span></div>
-                    <div class="task-row"><input type="checkbox" id="g-squat"> <span>100 Squats</span></div>
-                    <div class="task-row"><input type="checkbox" id="g-run"> <span>10km Run</span></div>
-                    <button class="save-btn" onclick="saveData()">LOG REGIMEN</button>
+            <div id="data-itachi" class="char-data">
+                <div class="char-header-sub">Karakter Naruto</div>
+                <h1 class="char-header-main">Itachi Uchiha</h1>
+                <p class="desc-box" id="quote-itachi">"It is not wise to judge others based on your own preconceptions and by their appearances."</p>
+
+                <div class="stats-carousel">
+                    <div class="stat-card">
+                        <div class="stat-num">01.</div>
+                        <div class="stat-title">CURRENT CASE</div>
+                        <input type="text" id="i-case" class="sleek-input" placeholder="e.g. Sanjay Rathore">
+                    </div>
+                    <div class="stat-card center-glow">
+                        <div class="stat-num" style="align-self:flex-start;">02.</div>
+                        <div class="stat-val">S</div>
+                        <div class="stat-title">RANK</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">03.</div>
+                        <div class="stat-title">PAGES READ</div>
+                        <input type="number" id="i-pages" class="sleek-input" placeholder="/ Goal">
+                    </div>
+                </div>
+
+                <h2 class="about-title">About Itachi</h2>
+                <div class="pill-grid">
+                    <div class="pill">Height: 175.2 cm</div>
+                    <div class="pill">Gender: Male</div>
+                    <div class="pill">Clan: Uchiha</div>
+                    <div class="pill">Academy Grad: 7 Years</div>
+                    <div class="pill">Reg No: 012110</div>
+                </div>
+
+                <button class="action-btn" onclick="saveData()">Cast Tsukuyomi <span class="arrow">↗</span></button>
+            </div>
+
+            <div id="data-sasuke" class="char-data">
+                <div class="char-header-sub">Karakter Naruto</div>
+                <h1 class="char-header-main">Sasuke Uchiha</h1>
+                <p class="desc-box" id="quote-sasuke">"I have long since closed my eyes... My only goal is in the darkness."</p>
+
+                <div class="stats-carousel">
+                    <div class="stat-card">
+                        <div class="stat-num">01.</div>
+                        <div class="stat-title">CLEANSE</div>
+                        <label class="task-label"><input type="checkbox" id="s-cleanse"> Deep Cleanse</label>
+                    </div>
+                    <div class="stat-card center-glow">
+                        <div class="stat-num" style="align-self:flex-start;">02.</div>
+                        <div class="stat-val">S</div>
+                        <div class="stat-title">RANK</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">03.</div>
+                        <div class="stat-title">HYDRATE</div>
+                        <label class="task-label"><input type="checkbox" id="s-moist"> Serum</label>
+                        <label class="task-label"><input type="checkbox" id="s-spf"> SPF 50</label>
+                    </div>
+                </div>
+
+                <h2 class="about-title">About Sasuke</h2>
+                <div class="pill-grid">
+                    <div class="pill">Height: 182 cm</div>
+                    <div class="pill">Clan: Uchiha</div>
+                    <div class="pill">Chakra: Lightning</div>
+                    <div class="pill">Affiliation: None</div>
+                </div>
+
+                <button class="action-btn" onclick="saveData()">Secure Glow <span class="arrow">↗</span></button>
+            </div>
+
+            <div id="data-naruto" class="char-data">
+                <div class="char-header-sub">Karakter Naruto</div>
+                <h1 class="char-header-main">Naruto Uzumaki</h1>
+                <p class="desc-box" id="quote-naruto">"I’m not gonna run away, I never go back on my word!"</p>
+
+                <div class="stats-carousel">
+                    <div class="stat-card" style="flex: 0 0 200px;">
+                        <div class="stat-num">01.</div>
+                        <div class="stat-title">MOOD LOG</div>
+                        <div style="display:flex; gap:5px; margin-top:auto;">
+                            <button style="padding:6px; background:rgba(0,0,0,0.8); color:white; border:1px solid #fca311; border-radius:4px; font-weight:bold; font-size:0.7rem;" onclick="logMood('Great')">GREAT</button>
+                            <button style="padding:6px; background:rgba(0,0,0,0.8); color:white; border:1px solid #fca311; border-radius:4px; font-weight:bold; font-size:0.7rem;" onclick="logMood('Okay')">OKAY</button>
+                            <button style="padding:6px; background:rgba(0,0,0,0.8); color:white; border:1px solid #fca311; border-radius:4px; font-weight:bold; font-size:0.7rem;" onclick="logMood('Struggling')">BAD</button>
+                        </div>
+                    </div>
+                    <div class="stat-card center-glow">
+                        <div class="stat-num" style="align-self:flex-start;">02.</div>
+                        <div class="stat-val">S</div>
+                        <div class="stat-title">RANK</div>
+                    </div>
+                </div>
+
+                <h2 class="about-title">About Naruto</h2>
+                <div class="pill-grid">
+                    <div class="pill">Height: 180 cm</div>
+                    <div class="pill">Clan: Uzumaki</div>
+                    <div class="pill">Jinchūriki: Kurama</div>
+                    <div class="pill">Title: Hokage</div>
+                </div>
+
+                <div class="media-grid">
+                    <div class="media-box" style="padding:0;">
+                        <canvas id="moodChart" style="width:100%; height:100%;"></canvas>
+                    </div>
+                    <div class="media-box">
+                        <p id="naruto-response" style="font-weight:bold; font-style:italic; font-size:0.8rem; text-align:center;">"Log your mood, dattebayo!"</p>
+                    </div>
                 </div>
             </div>
 
             <div id="data-pain" class="char-data">
-                <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <h1 class="char-name">PAIN</h1>
-                <h2 class="kanji">(ペイン)</h2>
-                <div class="tracker-form">
-                    <div class="dialogue-box" id="quote-pain"></div>
-                    <div class="task-row"><input type="checkbox" id="p-syl"> <span>Syllabus Tracked</span></div>
-                    <div class="task-row"><input type="checkbox" id="p-intern"> <span>Firms Approached</span></div>
-                    <div class="task-row"><input type="checkbox" id="p-dpdp"> <span>DPDP Drafted</span></div>
-                    <button class="save-btn" onclick="saveData()">ENFORCE ORDER</button>
-                </div>
-            </div>
+                <div class="char-header-sub">Karakter Naruto</div>
+                <h1 class="char-header-main">Pain (Nagato)</h1>
+                <p class="desc-box" id="quote-pain">"Those who do not understand true pain can never understand true peace."</p>
 
-            <div id="data-itachi" class="char-data">
-                <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <h1 class="char-name">ITACHI UCHIHA</h1>
-                <h2 class="kanji">(うちは イタチ)</h2>
-                <div class="tracker-form">
-                    <div class="dialogue-box" id="quote-itachi"></div>
-                    <input type="text" id="i-case" placeholder="Current Case Name">
-                    <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
-                        <input type="number" id="i-pages" placeholder="Pages Read">
-                        <span style="font-weight:bold; color:white; white-space:nowrap;">/ Goal</span>
+                <div class="stats-carousel">
+                    <div class="stat-card">
+                        <div class="stat-num">01.</div>
+                        <div class="stat-title">ACADEMICS</div>
+                        <label class="task-label"><input type="checkbox" id="p-syl"> Syllabus</label>
+                        <label class="task-label"><input type="checkbox" id="p-dpdp"> DPDP Act</label>
                     </div>
-                    <button class="save-btn" onclick="saveData()">CAST TSUKUYOMI</button>
-                </div>
-            </div>
-
-            <div id="data-sasuke" class="char-data">
-                <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <h1 class="char-name">SASUKE UCHIHA</h1>
-                <h2 class="kanji">(うちは サスケ)</h2>
-                <div class="tracker-form">
-                    <div class="dialogue-box" id="quote-sasuke"></div>
-                    <div class="task-row"><input type="checkbox" id="s-cleanse"> <span>Deep Cleanse</span></div>
-                    <div class="task-row"><input type="checkbox" id="s-moist"> <span>Hydration Serum</span></div>
-                    <div class="task-row"><input type="checkbox" id="s-spf"> <span>Sun Protection (SPF)</span></div>
-                    <button class="save-btn" onclick="saveData()">SECURE GLOW</button>
-                </div>
-            </div>
-
-            <div id="data-naruto" class="char-data">
-                <div class="rank-display"><span class="s-rank">S</span> RANK</div>
-                <h1 class="char-name">NARUTO UZUMAKI</h1>
-                <h2 class="kanji">(うずまき ナルト)</h2>
-                <div class="tracker-form">
-                    <div class="dialogue-box" id="quote-naruto"></div>
-                    <div class="mood-row">
-                        <button class="mood-btn" onclick="logMood('Great')">GREAT</button>
-                        <button class="mood-btn" onclick="logMood('Okay')">OKAY</button>
-                        <button class="mood-btn" onclick="logMood('Struggling')">STRUGGLING</button>
+                    <div class="stat-card center-glow">
+                        <div class="stat-num" style="align-self:flex-start;">02.</div>
+                        <div class="stat-val">S</div>
+                        <div class="stat-title">RANK</div>
                     </div>
-                    <div class="chart-container"><canvas id="moodChart"></canvas></div>
+                    <div class="stat-card">
+                        <div class="stat-num">03.</div>
+                        <div class="stat-title">CAREER</div>
+                        <label class="task-label"><input type="checkbox" id="p-intern"> Delhi Firms</label>
+                    </div>
                 </div>
+
+                <h2 class="about-title">About Pain</h2>
+                <div class="pill-grid">
+                    <div class="pill">Clan: Uzumaki</div>
+                    <div class="pill">Dōjutsu: Rinnegan</div>
+                    <div class="pill">Affiliation: Akatsuki</div>
+                </div>
+
+                <button class="action-btn" onclick="saveData()">Enforce Order <span class="arrow">↗</span></button>
+            </div>
+
+            <div id="data-guy" class="char-data">
+                <div class="char-header-sub">Karakter Naruto</div>
+                <h1 class="char-header-main">Might Guy</h1>
+                <p class="desc-box" id="quote-guy">"The Springtime of Youth has yet to fade! Let's do 500 push-ups!"</p>
+
+                <div class="stats-carousel">
+                    <div class="stat-card">
+                        <div class="stat-num">01.</div>
+                        <div class="stat-title">STRENGTH</div>
+                        <label class="task-label"><input type="checkbox" id="g-push"> 100 Pushups</label>
+                        <label class="task-label"><input type="checkbox" id="g-squat"> 100 Squats</label>
+                    </div>
+                    <div class="stat-card center-glow">
+                        <div class="stat-num" style="align-self:flex-start;">02.</div>
+                        <div class="stat-val">S</div>
+                        <div class="stat-title">RANK</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">03.</div>
+                        <div class="stat-title">ENDURANCE</div>
+                        <label class="task-label"><input type="checkbox" id="g-run"> 10km Run</label>
+                    </div>
+                </div>
+
+                <h2 class="about-title">About Guy</h2>
+                <div class="pill-grid">
+                    <div class="pill">Style: Taijutsu</div>
+                    <div class="pill">Affiliation: Konoha</div>
+                    <div class="pill">Rival: Kakashi</div>
+                </div>
+
+                <button class="action-btn" onclick="saveData()">Log Regimen <span class="arrow">↗</span></button>
             </div>
 
         </div>
@@ -338,11 +451,11 @@
 
         function setDailyQuotes() {
             const day = new Date().getDay(); 
-            document.getElementById('quote-guy').innerText = animeQuotes.guy[day];
-            document.getElementById('quote-pain').innerText = animeQuotes.pain[day];
-            document.getElementById('quote-itachi').innerText = animeQuotes.itachi[day];
-            document.getElementById('quote-sasuke').innerText = animeQuotes.sasuke[day];
-            document.getElementById('quote-naruto').innerText = animeQuotes.naruto[day];
+            document.getElementById('quote-guy').innerText = '"' + animeQuotes.guy[day] + '"';
+            document.getElementById('quote-pain').innerText = '"' + animeQuotes.pain[day] + '"';
+            document.getElementById('quote-itachi').innerText = '"' + animeQuotes.itachi[day] + '"';
+            document.getElementById('quote-sasuke').innerText = '"' + animeQuotes.sasuke[day] + '"';
+            document.getElementById('quote-naruto').innerText = '"' + animeQuotes.naruto[day] + '"';
         }
 
         function unlockSeal() {
@@ -352,7 +465,6 @@
             setTimeout(() => { overlay.style.opacity = '0'; setTimeout(() => { overlay.style.display = 'none'; }, 1500); }, 600); 
         }
 
-        // Hover Effect Logic
         function previewTheme(color, gradient) {
             if (document.body.classList.contains('is-home')) {
                 document.documentElement.style.setProperty('--theme-color', color);
@@ -367,7 +479,6 @@
             }
         }
 
-        // Return to Chakra Body Home Screen
         function goHome() {
             document.body.classList.add('is-home');
             currentThemeColor = '#00bfff';
@@ -378,7 +489,6 @@
             updateChakraFill();
         }
 
-        // Open Character Tracker
         function switchChar(id, color, gradient, baseImgUrl, clickedElement) {
             document.body.classList.remove('is-home');
             currentThemeColor = color;
@@ -392,7 +502,7 @@
             
             setTimeout(() => {
                 render.src = baseImgUrl; 
-                render.style.opacity = 0.35; 
+                render.style.opacity = 0.4; 
                 render.style.transform = 'scale(1) translateY(0)';
             }, 350);
 
@@ -405,7 +515,6 @@
             if (id === 'naruto') renderMoodChart();
         }
 
-        // Global Progress Tracker logic
         function updateChakraFill() {
             const db = JSON.parse(localStorage.getItem('shinobiDB')) || {};
             let score = 0;
@@ -422,7 +531,6 @@
             const totalGoals = 12;
             const percentage = Math.min(100, Math.round((score / totalGoals) * 100));
             
-            // Adjust the background fill and color intensity based on progress
             document.getElementById('chakra-fill-level').style.height = percentage + '%';
             document.getElementById('chakra-percent-text').innerText = percentage + '%';
         }
@@ -464,6 +572,11 @@
             showToast();
             renderMoodChart();
             updateChakraFill();
+            
+            const res = document.getElementById('naruto-response');
+            if(mood === 'Great') res.innerText = `"That's what I'm talking about! Keep that fire burning!"`;
+            if(mood === 'Okay') res.innerText = `"Take it steady! We still have a long way to go!"`;
+            if(mood === 'Struggling') res.innerText = `"Hey, even I fail sometimes. Rest up, you've got this!"`;
         }
 
         function renderMoodChart() {
@@ -473,7 +586,7 @@
             const ctx = document.getElementById('moodChart').getContext('2d');
 
             if (moodChartInstance) moodChartInstance.destroy();
-            moodChartInstance = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ data: dataPoints, borderColor: '#fca311', backgroundColor: 'rgba(252, 163, 17, 0.2)', borderWidth: 2, pointBackgroundColor: '#ffffff', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0.5, max: 3.5, ticks: { stepSize: 1, color: '#a0a0a0', callback: function(value) { if(value===1)return 'Struggling'; if(value===2)return 'Okay'; if(value===3)return 'Great'; return ''; } }, grid: { color: 'rgba(255,255,255,0.1)' } }, x: { ticks: { color: '#a0a0a0' }, grid: { display: false } } }, plugins: { legend: { display: false } } } });
+            moodChartInstance = new Chart(ctx, { type: 'line', data: { labels: labels, datasets: [{ data: dataPoints, borderColor: '#fca311', backgroundColor: 'rgba(252, 163, 17, 0.2)', borderWidth: 2, pointBackgroundColor: '#ffffff', tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0.5, max: 3.5, ticks: { display: false }, grid: { color: 'rgba(255,255,255,0.1)' } }, x: { ticks: { display: false }, grid: { display: false } } }, plugins: { legend: { display: false } }, layout: { padding: 0 } } });
         }
 
         function showToast() {
